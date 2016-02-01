@@ -1,6 +1,7 @@
 # encoding: UTF-8
 
 require 'Gosu'
+require_relative 'GameVars'
 
 WIN_SIZE = [1200, 800]
 COLORS = {
@@ -12,9 +13,9 @@ COLORS = {
     GREEN: Gosu::Color.argb(0xff00ff00)
 }
 GRILLE_SIZE = 300
-GRILLE_POSITION = [WIN_SIZE[0] - GRILLE_SIZE - 50, (WIN_SIZE[1] - GRILLE_SIZE) / 2]
+GRILLE_POSITION = [WIN_SIZE[0] - GRILLE_SIZE - 100, (WIN_SIZE[1] - GRILLE_SIZE) / 2]
 START_SIZE = 200
-PATH_BIFF = [- 2 * GRILLE_SIZE / 3, - GRILLE_SIZE / 3]
+PATH_BIFF = [-2 * GRILLE_SIZE / 3, -GRILLE_SIZE / 3]
 
 class GameWindow < Gosu::Window
   def initialize(*args)
@@ -28,225 +29,22 @@ class GameWindow < Gosu::Window
     }
     @fonts = {
         start: Gosu::Font.new(self, Gosu.default_font_name, 150),
-        restart: Gosu::Font.new(self, Gosu.default_font_name, 30)
+        buttons: Gosu::Font.new(self, Gosu.default_font_name, 30),
+        coords: Gosu::Font.new(self, Gosu.default_font_name, 50)
     }
     @buttons = {
         restart: {
-            size: [(@fonts[:restart].text_width('rejouer') + 20) / 2, (@fonts[:restart].height + 10) / 2],
-            pos: [width - (@fonts[:restart].text_width('rejouer') + 20) / 2 - 10, (@fonts[:restart].height + 10) / 2 + 10],
+            size: [(@fonts[:buttons].text_width('rejouer') + 20) / 2, (@fonts[:buttons].height + 10) / 2],
+            pos: [width - (@fonts[:buttons].text_width('rejouer') + 20) / 2 - 10, (@fonts[:buttons].height + 10) / 2 + 10],
             color: COLORS[:GRAY],
-            state: false
+            hover: false
         }
     }
-    @grille = {
-        a: {
-            pos: [
-                [GRILLE_POSITION[0], GRILLE_POSITION[1]],
-                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1]],
-                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0], GRILLE_POSITION[1] + GRILLE_SIZE / 3],
-            ],
-            force: false,
-            hover: false,
-            state: false,
-            color: nil,
-            path: :a,
-            others: [
-                [:b, :c],
-                [:d, :g],
-                [:e, :i]
-            ]
-        },
-        b: {
-            pos: [
-                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1]],
-                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1]],
-                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3]
-            ],
-            force: false,
-            hover: false,
-            state: false,
-            color: nil,
-            path: :a,
-            others: [
-                [:a, :c],
-                [:e, :h]
-            ]
-        },
-        c: {
-            pos: [
-                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1]],
-                [GRILLE_POSITION[0] + GRILLE_SIZE, GRILLE_POSITION[1]],
-                [GRILLE_POSITION[0] + GRILLE_SIZE, GRILLE_POSITION[1]+ GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3]
-            ],
-            force: false,
-            hover: false,
-            state: false,
-            color: nil,
-            path: :a,
-            others: [
-                [:a, :b],
-                [:f, :i],
-                [:e, :g]
-            ]
-        },
-        d: {
-            pos: [
-                [GRILLE_POSITION[0], GRILLE_POSITION[1] + GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0], GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3]
-            ],
-            force: false,
-            hover: false,
-            state: false,
-            color: nil,
-            path: :b,
-            others: [
-                [:a, :g],
-                [:e, :f]
-            ]
-        },
-        e: {
-            pos: [
-                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3]
-            ],
-            force: false,
-            hover: false,
-            state: true,
-            color: COLORS[:RED],
-            path: :b,
-            others:  [
-                [:b, :h],
-                [:d, :f],
-                [:a, :i],
-                [:c, :g]
-            ]
-        },
-        f: {
-            pos: [
-                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + GRILLE_SIZE, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + GRILLE_SIZE, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3]
-            ],
-            force: false,
-            hover: false,
-            state: false,
-            color: nil,
-            path: :b,
-            others: [
-                [:c, :i],
-                [:d, :e]
-            ]
-        },
-        g: {
-            pos: [
-                [GRILLE_POSITION[0], GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE],
-                [GRILLE_POSITION[0], GRILLE_POSITION[1] + GRILLE_SIZE],
-            ],
-            force: false,
-            hover: false,
-            state: false,
-            color: nil,
-            path: :c,
-            others: [
-                [:a, :d],
-                [:h, :i]
-            ]
-        },
-        h: {
-            pos: [
-                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE],
-                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE],
-            ],
-            force: false,
-            hover: false,
-            state: false,
-            color: nil,
-            path: :c,
-            others: [
-                [:b, :e],
-                [:g, :i]
-            ]
-        },
-        i: {
-            pos: [
-                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + GRILLE_SIZE, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
-                [GRILLE_POSITION[0] + GRILLE_SIZE, GRILLE_POSITION[1] + GRILLE_SIZE],
-                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE]
-            ],
-            force: false,
-            hover: false,
-            state: false,
-            color: nil,
-            path: :c,
-            others: [
-                [:c, :f],
-                [:g, :h],
-                [:a, :e]
-            ]
-        }
-    }
-    @starts = {
-        state: false,
-        dts: {
-            a: {
-                lines: [
-                    [0, START_SIZE, START_SIZE, START_SIZE],
-                    [START_SIZE, 0, START_SIZE, START_SIZE]
-                ],
-                state: false,
-                hover: false
-            },
-            b: {
-                lines: [
-                    [0, height - START_SIZE, START_SIZE, height - START_SIZE],
-                    [START_SIZE, height - START_SIZE, START_SIZE, height]
-                ],
-                state: false,
-                hover: false
-            }
-        }
-    }
-    @paths = {
-        a: {
-            lines: [
-                [70, GRILLE_POSITION[1] + GRILLE_SIZE / 2, GRILLE_POSITION[0] + PATH_BIFF[0], GRILLE_POSITION[1] + GRILLE_SIZE / 2],
-                [GRILLE_POSITION[0] + PATH_BIFF[0], GRILLE_POSITION[1] + GRILLE_SIZE / 2, GRILLE_POSITION[0] + PATH_BIFF[1], GRILLE_POSITION[1] + GRILLE_SIZE / 2],
-                [GRILLE_POSITION[0] + PATH_BIFF[1], GRILLE_POSITION[1] + GRILLE_SIZE / 6, GRILLE_POSITION[0], GRILLE_POSITION[1] + GRILLE_SIZE / 6],
-                [GRILLE_POSITION[0] + PATH_BIFF[1], GRILLE_POSITION[1] + GRILLE_SIZE / 6, GRILLE_POSITION[0] + PATH_BIFF[1], GRILLE_POSITION[1] + GRILLE_SIZE / 2]
-            ],
-            state: false
-        },
-        b: {
-            lines: [
-                [70, GRILLE_POSITION[1] + GRILLE_SIZE / 2, GRILLE_POSITION[0] + PATH_BIFF[0], GRILLE_POSITION[1] + GRILLE_SIZE / 2],
-                [GRILLE_POSITION[0] + PATH_BIFF[0], GRILLE_POSITION[1] + GRILLE_SIZE / 2, GRILLE_POSITION[0] + PATH_BIFF[1], GRILLE_POSITION[1] + GRILLE_SIZE / 2],
-                [GRILLE_POSITION[0] + PATH_BIFF[1], GRILLE_POSITION[1] + GRILLE_SIZE / 2, GRILLE_POSITION[0], GRILLE_POSITION[1] + GRILLE_SIZE / 2]
-            ],
-            state: false
-        },
-        c: {
-            lines: [
-                [70, GRILLE_POSITION[1] + GRILLE_SIZE / 2, GRILLE_POSITION[0] + PATH_BIFF[0], GRILLE_POSITION[1] + GRILLE_SIZE / 2],
-                [GRILLE_POSITION[0] + PATH_BIFF[0], GRILLE_POSITION[1] + 5 * GRILLE_SIZE / 6, GRILLE_POSITION[0], GRILLE_POSITION[1] + 5 * GRILLE_SIZE / 6],
-                [GRILLE_POSITION[0] + PATH_BIFF[0], GRILLE_POSITION[1] + 5 * GRILLE_SIZE / 6, GRILLE_POSITION[0] + PATH_BIFF[0], GRILLE_POSITION[1] + GRILLE_SIZE / 2],
-            ],
-            state: false
-        },
-    }
-    @win = []
+    gameVars = GameVars.new(GRILLE_POSITION, GRILLE_SIZE)
+    @coords = gameVars.setCoords
+    @grille = gameVars.setGrid
+    @starts = gameVars.setStarts(height)
+    @paths = gameVars.setPaths
   end
 
   def needs_cursor?
@@ -265,9 +63,10 @@ class GameWindow < Gosu::Window
         end
 
         @buttons.each do |k, v|
-          if v[:state]
+          if v[:hover]
             case k
-              when :restart then initialize(*@args)
+              when :restart then
+                initialize(*@args)
             end
           end
         end
@@ -278,8 +77,10 @@ class GameWindow < Gosu::Window
             @starts[:state] = true
           end
         end
-      when Gosu::KbSpace then initialize(*@args)
-      when Gosu::KbEscape then close
+      when Gosu::KbSpace then
+        initialize(*@args)
+      when Gosu::KbEscape then
+        close
     end
   end
 
@@ -296,7 +97,7 @@ class GameWindow < Gosu::Window
 
     @grille.each_value do |place|
       color = place[:color]
-      if mouse_x > place[:pos][0][0] and mouse_x < place[:pos][1][0] and mouse_y > place[:pos][0][1] and mouse_y < place[:pos][2][1] and @state and @starts[:state] and @steps < 9  and not place[:state]
+      if mouse_x > place[:pos][0][0] and mouse_x < place[:pos][1][0] and mouse_y > place[:pos][0][1] and mouse_y < place[:pos][2][1] and @state and @starts[:state] and @steps < 9 and not place[:state]
         place[:hover] = true
         @paths[place[:path]][:state] = true
         path_on = @paths[place[:path]]
@@ -306,9 +107,6 @@ class GameWindow < Gosu::Window
       end
       place[:others].each do |other|
         if color == @grille[other[0]][:color] and color == @grille[other[1]][:color] and @grille[other[0]][:state] and @grille[other[1]][:state] and place[:state] and @state
-          @win << place
-          @win << @grille[other[0]]
-          @win << @grille[other[1]]
           place[:force] = true
           @grille[other[0]][:force] = true
           @grille[other[1]][:force] = true
@@ -321,10 +119,10 @@ class GameWindow < Gosu::Window
     @buttons.each_value do |button|
       if mouse_x > button[:pos][0] - button[:size][0] and mouse_x < button[:pos][0] + button[:size][0] and mouse_y > button[:pos][1] - button[:size][1] and mouse_y < button[:pos][1] + button[:size][1]
         button[:color] = COLORS[:DARK_GRAY]
-        button[:state] = true
+        button[:hover] = true
       else
         button[:color] = COLORS[:GRAY]
-        button[:state] = false
+        button[:hover] = false
       end
     end
   end
@@ -342,7 +140,11 @@ class GameWindow < Gosu::Window
               button[:pos][0] + button[:size][0], button[:pos][1] - button[:size][1], button[:color],
               button[:pos][0] + button[:size][0], button[:pos][1] + button[:size][1], button[:color],
               button[:pos][0] - button[:size][0], button[:pos][1] + button[:size][1], button[:color])
-    @fonts[:restart].draw_rel('rejouer', button[:pos][0], button[:pos][1], 0, 0.5, 0.5, 1, 1, COLORS[:BLACK])
+    @fonts[:buttons].draw_rel('rejouer', button[:pos][0], button[:pos][1], 0, 0.5, 0.5, 1, 1, COLORS[:BLACK])
+
+    @coords.each_value do |coord|
+      @fonts[:coords].draw_rel(coord[:text], coord[:pos][0], coord[:pos][1], 0, 0.5, 0.5, 1, 1, COLORS[:BLACK])
+    end
 
     @starts[:dts].each_value do |start|
       (start[:state] or start[:hover]) ? color = COLORS[:GREEN] : color = COLORS[:BLACK]
@@ -378,4 +180,5 @@ class GameWindow < Gosu::Window
 end
 
 window = GameWindow.new(WIN_SIZE[0], WIN_SIZE[1], false)
+window.caption = 'Morpion'
 window.show
