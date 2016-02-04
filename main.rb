@@ -2,6 +2,7 @@
 
 require 'Gosu'
 require_relative 'GameVars'
+require_relative 'arrow'
 
 WIN_SIZE = [1200, 800]
 COLORS = {
@@ -10,12 +11,14 @@ COLORS = {
     BLACK: Gosu::Color.argb(0xff000000),
     GRAY: Gosu::Color.argb(0xff808080),
     DARK_GRAY: Gosu::Color.argb(0xff606060),
-    GREEN: Gosu::Color.argb(0xff00ff00)
+    GREEN: Gosu::Color.argb(0xff00ff00),
+    WHITE: Gosu::Color.argb(0xffffffff)
 }
 GRILLE_SIZE = 300
 GRILLE_POSITION = [WIN_SIZE[0] - GRILLE_SIZE - 100, (WIN_SIZE[1] - GRILLE_SIZE) / 2]
 START_SIZE = 200
 PATH_BIFF = [-2 * GRILLE_SIZE / 3, -GRILLE_SIZE / 3]
+NB_ARROWS = 50
 
 class GameWindow < Gosu::Window
   def initialize(*args)
@@ -25,7 +28,8 @@ class GameWindow < Gosu::Window
     @steps = 1
     @colors = [COLORS[:RED], COLORS[:BLUE]]
     @images = {
-        background: Gosu::Image.new(self, 'D:/Dev/Ruby/Projets/Morpion/Files/Images/background_2.jpg', false)
+        background: Gosu::Image.new(self, 'D:/Dev/Ruby/Projets/Morpion/Files/Images/background_2.jpg', false),
+        arrow: Gosu::Image.new(self, 'D:/Dev/Ruby/Projets/Morpion/Files/Images/fleche.png', false)
     }
     @fonts = {
         start: Gosu::Font.new(self, Gosu.default_font_name, 150),
@@ -40,10 +44,12 @@ class GameWindow < Gosu::Window
             hover: false
         }
     }
-    gameVars = GameVars.new(GRILLE_POSITION, GRILLE_SIZE)
+    gameVars = GameVars.new
+    @arrows_paths = gameVars.setArrowsPaths(@images[:arrow])
+    @arrows_places = gameVars.setArrowsPlaces(@images[:arrow])
     @coords = gameVars.setCoords
     @grille = gameVars.setGrid
-    @starts = gameVars.setStarts(height)
+    @starts = gameVars.setStarts
     @paths = gameVars.setPaths
   end
 
@@ -77,8 +83,8 @@ class GameWindow < Gosu::Window
             @starts[:state] = true
           end
         end
-      when Gosu::KbSpace then
-        initialize(*@args)
+      # when Gosu::KbSpace then
+      #   initialize(*@args)
       when Gosu::KbEscape then
         close
     end
@@ -86,6 +92,18 @@ class GameWindow < Gosu::Window
 
   def update
     path_on = nil
+
+    @arrows_paths.each_value do |arrows|
+      arrows.each do |arrow|
+        arrow.move
+      end
+    end
+
+    @arrows_places.each_value do |arrows|
+      arrows.each do |arrow|
+        arrow.move
+      end
+    end
 
     @starts[:dts].each_value do |start|
       if mouse_x > 0 and mouse_x < START_SIZE and mouse_y > start[:lines][1][1] and mouse_y < start[:lines][1][3] and not @starts[:state]
@@ -103,14 +121,15 @@ class GameWindow < Gosu::Window
         path_on = @paths[place[:path]]
       else
         place[:hover] = false
-        @paths[place[:path]][:state] = false unless @paths[place[:path]] == path_on
+        unless @paths[place[:path]] == path_on
+          @paths[place[:path]][:state] = false
+        end
       end
       place[:others].each do |other|
         if color == @grille[other[0]][:color] and color == @grille[other[1]][:color] and @grille[other[0]][:state] and @grille[other[1]][:state] and place[:state] and @state
           place[:force] = true
           @grille[other[0]][:force] = true
           @grille[other[1]][:force] = true
-          puts "#{COLORS.key color} won"
           @state = false
         end
       end
@@ -146,6 +165,16 @@ class GameWindow < Gosu::Window
       @fonts[:coords].draw_rel(coord[:text], coord[:pos][0], coord[:pos][1], 0, 0.5, 0.5, 1, 1, COLORS[:BLACK])
     end
 
+    if @steps % 2 == 0 and @state
+      @fonts[:coords].draw('RED', START_SIZE + 50, 50, 0, 1, 1, COLORS[:RED])
+    elsif @state
+      @fonts[:coords].draw('BLUE', START_SIZE + 50, 50, 0, 1, 1, COLORS[:BLUE])
+    elsif (@steps - 1) % 2 == 0
+      @fonts[:coords].draw('RED Won', START_SIZE + 50, 50, 0, 1, 1, COLORS[:RED])
+    else
+      @fonts[:coords].draw('BLUE Won', START_SIZE + 50, 50, 0, 1, 1, COLORS[:BLUE])
+    end
+
     @starts[:dts].each_value do |start|
       (start[:state] or start[:hover]) ? color = COLORS[:GREEN] : color = COLORS[:BLACK]
       start[:lines].each do |line|
@@ -153,8 +182,15 @@ class GameWindow < Gosu::Window
       end
     end
 
-    @grille.each_value do |place|
-      place[:hover] ? color = COLORS[:GREEN] : color = COLORS[:BLACK]
+    @grille.each do |k, place|
+      if place[:hover]
+        color = COLORS[:GREEN]
+        @arrows_places[k].each do |arrow|
+          arrow.draw
+        end
+      else
+        color = COLORS[:BLACK]
+      end
       place[:force] ? color = place[:color] : nil
       (0..3).each do |i|
         unless backup.include? [place[:pos][i%4], place[:pos][(i+1)%4]] or backup.include? [place[:pos][i%4], place[:pos][(i+1)%4]].reverse
@@ -169,8 +205,15 @@ class GameWindow < Gosu::Window
       end
     end
 
-    @paths.each_value do |path|
-      path[:state] ? color = COLORS[:GREEN] : color = COLORS[:BLACK]
+    @paths.each do |k, path|
+      if path[:state]
+        color = COLORS[:GREEN]
+        @arrows_paths[k].each do |arrow|
+          arrow.draw
+        end
+      else
+        color = COLORS[:BLACK]
+      end
       path[:lines].each do |line|
         draw_line(line[0], line[1], color, line[2], line[3], color) unless backup.include? line
         backup << line if path[:state]

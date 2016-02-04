@@ -1,19 +1,15 @@
-# encoding: UTF-8   
+# encoding: UTF-8
+
 class GameVars
-  
-  def initialize(pos, size)
-    @pos = pos
-    @size = size
-  end
   
   def setGrid
     grille = {
         a: {
             pos: [
-                [@pos[0], @pos[1]],
-                [@pos[0] + @size / 3, @pos[1]],
-                [@pos[0] + @size / 3, @pos[1] + @size / 3],
-                [@pos[0], @pos[1] + @size / 3],
+                [GRILLE_POSITION[0], GRILLE_POSITION[1]],
+                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1]],
+                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0], GRILLE_POSITION[1] + GRILLE_SIZE / 3],
             ],
             force: false,
             hover: false,
@@ -28,10 +24,10 @@ class GameVars
         },
         b: {
             pos: [
-                [@pos[0] + @size / 3, @pos[1]],
-                [@pos[0] + 2 * @size / 3, @pos[1]],
-                [@pos[0] + 2 * @size / 3, @pos[1] + @size / 3],
-                [@pos[0] + @size / 3, @pos[1] + @size / 3]
+                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1]],
+                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1]],
+                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3]
             ],
             force: false,
             hover: false,
@@ -45,10 +41,10 @@ class GameVars
         },
         c: {
             pos: [
-                [@pos[0] + 2 * @size / 3, @pos[1]],
-                [@pos[0] + @size, @pos[1]],
-                [@pos[0] + @size, @pos[1]+ @size / 3],
-                [@pos[0] + 2 * @size / 3, @pos[1] + @size / 3]
+                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1]],
+                [GRILLE_POSITION[0] + GRILLE_SIZE, GRILLE_POSITION[1]],
+                [GRILLE_POSITION[0] + GRILLE_SIZE, GRILLE_POSITION[1]+ GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3]
             ],
             force: false,
             hover: false,
@@ -63,10 +59,10 @@ class GameVars
         },
         d: {
             pos: [
-                [@pos[0], @pos[1] + @size / 3],
-                [@pos[0] + @size / 3, @pos[1] + @size / 3],
-                [@pos[0] + @size / 3, @pos[1] + 2 * @size / 3],
-                [@pos[0], @pos[1] + 2 * @size / 3]
+                [GRILLE_POSITION[0], GRILLE_POSITION[1] + GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0], GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3]
             ],
             force: false,
             hover: false,
@@ -80,10 +76,10 @@ class GameVars
         },
         e: {
             pos: [
-                [@pos[0] + @size / 3, @pos[1] + @size / 3],
-                [@pos[0] + 2 * @size / 3, @pos[1] + @size / 3],
-                [@pos[0] + 2 * @size / 3, @pos[1] + 2 * @size / 3],
-                [@pos[0] + @size / 3, @pos[1] + 2 * @size / 3]
+                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3]
             ],
             force: false,
             hover: false,
@@ -99,10 +95,10 @@ class GameVars
         },
         f: {
             pos: [
-                [@pos[0] + 2 * @size / 3, @pos[1] + @size / 3],
-                [@pos[0] + @size, @pos[1] + @size / 3],
-                [@pos[0] + @size, @pos[1] + 2 * @size / 3],
-                [@pos[0] + 2 * @size / 3, @pos[1] + 2 * @size / 3]
+                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + GRILLE_SIZE, GRILLE_POSITION[1] + GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + GRILLE_SIZE, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3]
             ],
             force: false,
             hover: false,
@@ -116,10 +112,10 @@ class GameVars
         },
         g: {
             pos: [
-                [@pos[0], @pos[1] + 2 * @size / 3],
-                [@pos[0] + @size / 3, @pos[1] + 2 * @size / 3],
-                [@pos[0] + @size / 3, @pos[1] + @size],
-                [@pos[0], @pos[1] + @size],
+                [GRILLE_POSITION[0], GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE],
+                [GRILLE_POSITION[0], GRILLE_POSITION[1] + GRILLE_SIZE],
             ],
             force: false,
             hover: false,
@@ -133,10 +129,10 @@ class GameVars
         },
         h: {
             pos: [
-                [@pos[0] + @size / 3, @pos[1] + 2 * @size / 3],
-                [@pos[0] + 2 * @size / 3, @pos[1] + 2 * @size / 3],
-                [@pos[0] + 2 * @size / 3, @pos[1] + @size],
-                [@pos[0] + @size / 3, @pos[1] + @size],
+                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE],
+                [GRILLE_POSITION[0] + GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE],
             ],
             force: false,
             hover: false,
@@ -150,10 +146,10 @@ class GameVars
         },
         i: {
             pos: [
-                [@pos[0] + 2 * @size / 3, @pos[1] + 2 * @size / 3],
-                [@pos[0] + @size, @pos[1] + 2 * @size / 3],
-                [@pos[0] + @size, @pos[1] + @size],
-                [@pos[0] + 2 * @size / 3, @pos[1] + @size]
+                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + GRILLE_SIZE, GRILLE_POSITION[1] + 2 * GRILLE_SIZE / 3],
+                [GRILLE_POSITION[0] + GRILLE_SIZE, GRILLE_POSITION[1] + GRILLE_SIZE],
+                [GRILLE_POSITION[0] + 2 * GRILLE_SIZE / 3, GRILLE_POSITION[1] + GRILLE_SIZE]
             ],
             force: false,
             hover: false,
@@ -206,8 +202,8 @@ class GameVars
             lines: [
                 [70, GRILLE_POSITION[1] + GRILLE_SIZE / 2, GRILLE_POSITION[0] + PATH_BIFF[0], GRILLE_POSITION[1] + GRILLE_SIZE / 2],
                 [GRILLE_POSITION[0] + PATH_BIFF[0], GRILLE_POSITION[1] + GRILLE_SIZE / 2, GRILLE_POSITION[0] + PATH_BIFF[1], GRILLE_POSITION[1] + GRILLE_SIZE / 2],
+                [GRILLE_POSITION[0] + PATH_BIFF[1], GRILLE_POSITION[1] + GRILLE_SIZE / 6, GRILLE_POSITION[0] + PATH_BIFF[1], GRILLE_POSITION[1] + GRILLE_SIZE / 2],
                 [GRILLE_POSITION[0] + PATH_BIFF[1], GRILLE_POSITION[1] + GRILLE_SIZE / 6, GRILLE_POSITION[0], GRILLE_POSITION[1] + GRILLE_SIZE / 6],
-                [GRILLE_POSITION[0] + PATH_BIFF[1], GRILLE_POSITION[1] + GRILLE_SIZE / 6, GRILLE_POSITION[0] + PATH_BIFF[1], GRILLE_POSITION[1] + GRILLE_SIZE / 2]
             ],
             state: false
         },
@@ -231,7 +227,7 @@ class GameVars
     paths
   end
 
-  def setStarts(height)
+  def setStarts
     starts = {
         state: false,
         dts: {
@@ -245,8 +241,8 @@ class GameVars
             },
             b: {
                 lines: [
-                    [0, height - START_SIZE, START_SIZE, height - START_SIZE],
-                    [START_SIZE, height - START_SIZE, START_SIZE, height]
+                    [0, WIN_SIZE[1] - START_SIZE, START_SIZE, WIN_SIZE[1] - START_SIZE],
+                    [START_SIZE, WIN_SIZE[1] - START_SIZE, START_SIZE, WIN_SIZE[1]]
                 ],
                 state: false,
                 hover: false
@@ -254,5 +250,60 @@ class GameVars
         }
     }
     starts
+  end
+  
+  def setArrowsPaths(image)
+    arrows_paths = {a: [], b: [], c: []}
+    ((GRILLE_POSITION[0] + PATH_BIFF[1] - 75) / 10).times do |i|
+      arrows_paths[:a] << Arrow.new(0, {x: 75 + 10 * i, y: GRILLE_POSITION[1] + GRILLE_SIZE / 2}, image)
+    end
+    ((-PATH_BIFF[1]) / 10).times do |i|
+      arrows_paths[:a] << Arrow.new(0, {x: GRILLE_POSITION[0] + PATH_BIFF[1] + 10 * i, y: GRILLE_POSITION[1] + GRILLE_SIZE / 6}, image)
+    end
+    ((GRILLE_SIZE / 2 - GRILLE_SIZE / 6) / 10).times do |i|
+      arrows_paths[:a] << Arrow.new(-90, {x: GRILLE_POSITION[0] + PATH_BIFF[1], y: GRILLE_POSITION[1] + GRILLE_SIZE / 2 - 10 * i}, image)
+    end
+    ((GRILLE_POSITION[0] - 75) / 10).times do |i|
+      arrows_paths[:b] << Arrow.new(0, {x: 75 + 10 * i, y: GRILLE_POSITION[1] + GRILLE_SIZE / 2}, image)
+    end
+    ((GRILLE_POSITION[0] + PATH_BIFF[0] - 75) / 10).times do |i|
+      arrows_paths[:c] << Arrow.new(0, {x: 75 + 10 * i, y: GRILLE_POSITION[1] + GRILLE_SIZE / 2}, image)
+    end
+    ((-PATH_BIFF[0]) / 10).times do |i|
+      arrows_paths[:c] << Arrow.new(0, {x: GRILLE_POSITION[0] + PATH_BIFF[0] + 10 * i, y: GRILLE_POSITION[1] + 5 * GRILLE_SIZE / 6}, image)
+    end
+    ((5 * GRILLE_SIZE / 6 - GRILLE_SIZE / 2) / 10).times do |i|
+      arrows_paths[:c] << Arrow.new(90, {x: GRILLE_POSITION[0] + PATH_BIFF[0], y: GRILLE_POSITION[1] + GRILLE_SIZE / 2 + 10 * i}, image)
+    end
+    arrows_paths
+  end
+
+  def setArrowsPlaces(image)
+    arrows_places = {a: [], b: [], c: [], d: [], f: [], g: [], h: [], i: []}
+    ((GRILLE_SIZE / 6) / 10).times do |i|
+      arrows_places[:a] << Arrow.new(0, {x: GRILLE_POSITION[0] + 10 * i, y: GRILLE_POSITION[1] + GRILLE_SIZE / 6}, image)
+    end
+    ((GRILLE_SIZE / 2) / 10).times do |i|
+      arrows_places[:b] << Arrow.new(0, {x: GRILLE_POSITION[0] + 10 * i, y: GRILLE_POSITION[1] + GRILLE_SIZE / 6}, image)
+    end
+    ((5 * GRILLE_SIZE / 6) / 10).times do |i|
+      arrows_places[:c] << Arrow.new(0, {x: GRILLE_POSITION[0] + 10 * i, y: GRILLE_POSITION[1] + GRILLE_SIZE / 6}, image)
+    end
+    ((GRILLE_SIZE / 6) / 10).times do |i|
+      arrows_places[:d] << Arrow.new(0, {x: GRILLE_POSITION[0] + 10 * i, y: GRILLE_POSITION[1] + GRILLE_SIZE / 2}, image)
+    end
+    ((5 * GRILLE_SIZE / 6) / 10).times do |i|
+      arrows_places[:f] << Arrow.new(0, {x: GRILLE_POSITION[0] + 10 * i, y: GRILLE_POSITION[1] + GRILLE_SIZE / 2}, image)
+    end
+    ((GRILLE_SIZE / 6) / 10).times do |i|
+      arrows_places[:g] << Arrow.new(0, {x: GRILLE_POSITION[0] + 10 * i, y: GRILLE_POSITION[1] + 5 * GRILLE_SIZE / 6}, image)
+    end
+    ((GRILLE_SIZE / 2) / 10).times do |i|
+      arrows_places[:h] << Arrow.new(0, {x: GRILLE_POSITION[0] + 10 * i, y: GRILLE_POSITION[1] + 5 * GRILLE_SIZE / 6}, image)
+    end
+    ((5 * GRILLE_SIZE / 6) / 10).times do |i|
+      arrows_places[:i] << Arrow.new(0, {x: GRILLE_POSITION[0] + 10 * i, y: GRILLE_POSITION[1] + 5 * GRILLE_SIZE / 6}, image)
+    end
+    arrows_places
   end
 end
